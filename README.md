@@ -39,3 +39,31 @@ pH level: 6.5
 Rainfall (mm): 203
 
 Output Example: Recommended crop: Rice
+
+🛠️ Technologies Used
+Python 3.8+
+
+Scikit-learn - Machine learning algorithms
+
+Pandas - Data manipulation
+
+Google Colab - Development environment
+
+📚 Dataset
+Source: Kaggle Crop Recommendation Dataset
+
+Samples: 2200
+
+Features: 7 numerical parameters
+
+Target: 22 crop types
+
+📝 Development Notes
+Originally developed in Google Colab for GPU acceleration
+
+Focus on agricultural decision support
+
+Model chosen based on comparative accuracy analysis
+
+👨‍💻 Author
+Amna Mumtaz - Software Engineering Student @ IIU
