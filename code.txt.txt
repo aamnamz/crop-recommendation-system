@@ -1,0 +1,54 @@
+import pandas as pd
+df = pd.read_csv('/content/Crop_cleaned.csv')
+#print("Dataset preview:\n", df.head())
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import LabelEncoder
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.naive_bayes import GaussianNB
+# Encode crop names into numbers
+le = LabelEncoder()
+df['label_encoded'] = le.fit_transform(df['label'])
+# Split data into features and labels
+X = df.drop(columns=['label', 'label_encoded', 'N_smoothed'], errors='ignore')
+y = df['label_encoded']
+# Train-test split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+# Decision Tree Classifier
+dt_model = DecisionTreeClassifier(random_state=42)
+dt_model.fit(X_train, y_train)
+dt_pred = dt_model.predict(X_test)
+b=accuracy_score(y_test, dt_pred)
+print("\n")
+print("\t Decision Tree Model")
+print("Decision Tree Accuracy:",b*100)
+print("\n Classification Report:\n", classification_report(y_test, dt_pred, target_names=le.classes_))
+# Naive Bayes Classifier
+nb_model = GaussianNB()
+nb_model.fit(X_train, y_train)
+nb_pred = nb_model.predict(X_test)
+a=accuracy_score(y_test, nb_pred)
+conf_matrix=confusion_matrix(y_test,nb_pred)
+print("\t Naive Bayes Model")
+print("\n Naive Bayes Accuracy:", a*100)
+print("\nConfusion Matrix:\n", conf_matrix)
+print("\nClassification Report:\n", classification_report(y_test, nb_pred, target_names=le.classes_))
+print("\n Since Naive Bayes is more accurate, we will use it")
+print("\n INPUT FROM USER")
+# Ask user to enter values
+print("Enter the following values for prediction:")
+N = float(input("Nitrogen (N): "))
+P = float(input("Phosphorous (P): "))
+K = float(input("Potassium (K): "))
+temperature = float(input("Temperature (°C): "))
+humidity = float(input("Humidity (%): "))
+ph = float(input("pH level: "))
+rainfall = float(input("Rainfall (mm): "))
+# Create input list
+user_input = [[N, P, K, temperature, humidity, ph, rainfall]]
+# Convert user input to DataFrame with proper columns
+user_input_df = pd.DataFrame(user_input, columns=X.columns)
+# Predict using Naive Bayes
+nb_prediction = nb_model.predict(user_input_df)
+nb_crop = le.inverse_transform(nb_prediction)[0]
+print("Naive Bayes predicts:", nb_crop)
